@@ -16,7 +16,6 @@ function App() {
       .then((res) => res.json())
       .then((json) => {
         setRates(json.usd);
-        console.log(json.usd);
       })
       .catch((err) => {
         console.warn(err);
@@ -38,6 +37,14 @@ function App() {
     setFromPrice(result);
     setToPrice(value);
   };
+
+  React.useEffect(() => {
+    onChangeFromPrice(fromPrice);
+  }, [fromCurrency]);
+
+  React.useEffect(() => {
+    onChangeToPrice(toPrice);
+  }, [toCurrency]);
 
   return (
     <div className="App">
