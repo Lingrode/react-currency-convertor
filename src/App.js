@@ -6,8 +6,9 @@ function App() {
   const [fromCurrency, setFromCurrency] = React.useState("UAH");
   const [toCurrency, setToCurrency] = React.useState("USD");
   const [fromPrice, setFromPrice] = React.useState(0);
-  const [toPrice, setToPrice] = React.useState(0);
-  const [rates, setRates] = React.useState({});
+  const [toPrice, setToPrice] = React.useState(1);
+
+  const ratesRef = React.useRef({});
 
   React.useEffect(() => {
     fetch(
@@ -15,7 +16,8 @@ function App() {
     )
       .then((res) => res.json())
       .then((json) => {
-        setRates(json.usd);
+        ratesRef.current = json.usd;
+        onChangeToPrice(1);
       })
       .catch((err) => {
         console.warn(err);
@@ -24,17 +26,18 @@ function App() {
   }, []);
 
   const onChangeFromPrice = (value) => {
-    const price = value / rates[fromCurrency.toLowerCase()];
-    const result = price * rates[toCurrency.toLowerCase()];
-    setToPrice(result);
+    const price = value / ratesRef.current[fromCurrency.toLowerCase()];
+    const result = price * ratesRef.current[toCurrency.toLowerCase()];
+    setToPrice(result.toFixed(3));
     setFromPrice(value);
   };
 
   const onChangeToPrice = (value) => {
     const result =
-      (rates[fromCurrency.toLowerCase()] / rates[toCurrency.toLowerCase()]) *
+      (ratesRef.current[fromCurrency.toLowerCase()] /
+        ratesRef.current[toCurrency.toLowerCase()]) *
       value;
-    setFromPrice(result);
+    setFromPrice(result.toFixed(3));
     setToPrice(value);
   };
 
