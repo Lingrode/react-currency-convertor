@@ -15,8 +15,8 @@ function App() {
     )
       .then((res) => res.json())
       .then((json) => {
-        setRates(json.rates);
-        console.log(json.rates);
+        setRates(json.usd);
+        console.log(json.usd);
       })
       .catch((err) => {
         console.warn(err);
@@ -25,10 +25,17 @@ function App() {
   }, []);
 
   const onChangeFromPrice = (value) => {
+    const price = value / rates[fromCurrency.toLowerCase()];
+    const result = price * rates[toCurrency.toLowerCase()];
+    setToPrice(result);
     setFromPrice(value);
   };
 
   const onChangeToPrice = (value) => {
+    const result =
+      (rates[fromCurrency.toLowerCase()] / rates[toCurrency.toLowerCase()]) *
+      value;
+    setFromPrice(result);
     setToPrice(value);
   };
 
